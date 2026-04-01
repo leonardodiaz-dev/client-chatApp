@@ -1,0 +1,95 @@
+<div class="h-screen flex items-center justify-center bg-gray-100">
+  <div class="bg-white p-8 rounded-xl shadow-md w-96">
+    <h2 class="text-2xl font-bold mb-6 text-center">Registro</h2>
+
+    <form [formGroup]="formRegister" (ngSubmit)="enviar()">
+      <div class="space-y-1 my-3">
+        <label for="name" class="block text-sm font-medium text-gray-700"
+          >Nombre</label
+        >
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          placeholder="Ingresa tu nombre"
+          class="w-full p-2 border rounded focus:outline-none focus:ring-2 transition-all"
+          [class.border-red-500]="getError('name')"
+          [class.focus:ring-red-200]="getError('name')"
+        />
+        <p *ngIf="getError('name')" class="text-red-500 text-xs mt-1 italic">
+          {{ getError("name") }}
+        </p>
+      </div>
+
+      <div class="space-y-1 my-3">
+        <label for="email" class="block text-sm font-medium text-gray-700"
+          >Correo electrónico</label
+        >
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="ejemplo@correo.com"
+          class="w-full p-2 border rounded focus:outline-none focus:ring-2 transition-all"
+          [class.border-red-500]="getError('email')"
+          [class.focus:ring-red-200]="getError('email')"
+        />
+        <p *ngIf="getError('email')" class="text-red-500 text-xs mt-1 italic">
+          {{ getError("email") }}
+        </p>
+      </div>
+
+      <div class="space-y-1 my-3">
+        <label for="password" class="block text-sm font-medium text-gray-700"
+          >Contraseña</label
+        >
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          placeholder="Ingresa la contraseña"
+          class="w-full p-2 border rounded focus:outline-none focus:ring-2 transition-all"
+          [class.border-red-500]="getError('password')"
+          [class.focus:ring-red-200]="getError('password')"
+        />
+        <p
+          *ngIf="getError('password')"
+          class="text-red-500 text-xs mt-1 italic"
+        >
+          {{ getError("password") }}
+        </p>
+      </div>
+
+      <div class="space-y-1 my-3">
+        <label
+          for="password_confirmation"
+          class="block text-sm font-medium text-gray-700"
+          >Repetir Contraseña</label
+        >
+        <input
+          type="password"
+          id="password_confirmation"
+          formControlName="password_confirmation"
+          placeholder="Repite la contraseña"
+          class="w-full p-2 border rounded focus:outline-none focus:ring-2 transition-all"
+          [class.border-red-500]="getError('password_confirmation')"
+          [class.focus:ring-red-200]="getError('password_confirmation')"
+        />
+        <p
+          *ngIf="getError('password_confirmation')"
+          class="text-red-500 text-xs mt-1 italic"
+        >
+          {{ getError("password_confirmation") }}
+        </p>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="formRegister.invalid"
+        class="w-full mt-4 bg-blue-600 text-white p-2 rounded hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
+      >
+        Registrarse
+      </button>
+    </form>
+  </div>
+</div>

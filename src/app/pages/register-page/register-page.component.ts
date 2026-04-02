@@ -12,12 +12,11 @@ import { FormUser } from '../../models/user.model';
 
 @Component({
   selector: 'app-register-page',
-  imports: [FormsModule, ReactiveFormsModule,CommonModule],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.css',
 })
 export class RegisterPageComponent {
-
   private authService = inject(AuthService);
   private form = inject(FormBuilder);
 
@@ -31,7 +30,7 @@ export class RegisterPageComponent {
           Validators.required,
           Validators.minLength(8),
           Validators.pattern(
-           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
           ),
         ],
       ],
@@ -61,8 +60,7 @@ export class RegisterPageComponent {
       required: 'Este campo es obligatorio',
       email: 'Formato de email inválido',
       minlength: `Mínimo ${control.getError('minlength')?.requiredLength} caracteres`,
-      pattern:
-        'Debe tener: 1 minúscula, 1 mayúscula, 1 número y 1 carácter especial',
+      pattern:'Debe tener: 1 minúscula, 1 mayúscula, 1 número y 1 carácter especial',
       noMatch: 'Las contraseñas no coinciden',
     };
 
@@ -73,7 +71,7 @@ export class RegisterPageComponent {
 
   enviar() {
     if (this.formRegister.valid) {
-     const data: FormUser = this.formRegister.getRawValue();
+      const data: FormUser = this.formRegister.getRawValue();
 
       this.authService.registerUser(data).subscribe({
         next: (response) => {
@@ -84,7 +82,7 @@ export class RegisterPageComponent {
         error: (err) => {
           console.error('Error en el registro', err);
           // Aquí podrías manejar el error 422 de Laravel si el correo ya existe
-        }
+        },
       });
     } else {
       this.formRegister.markAllAsTouched(); // Marca errores si el usuario da clic sin llenar

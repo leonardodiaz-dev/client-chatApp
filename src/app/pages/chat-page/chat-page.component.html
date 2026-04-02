@@ -1,9 +1,17 @@
 <div class="h-screen flex w-full">
 
   <app-chat-list
+   *ngIf="viewLeft==='chatList'"
     class="w-1/3"
+    (changeView)="viewLeft=$event"
    [chats] ='chats' (selectConversation)="setConversation($event)">
   </app-chat-list>
+
+  <app-new-chat 
+   *ngIf="viewLeft==='newChat'"
+    (changeView)="viewLeft=$event"
+    class="w-1/3">
+  </app-new-chat>
 
   <app-chat-window
     class="flex-1"

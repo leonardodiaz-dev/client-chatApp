@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FormUser } from '../../models/user.model';
+import { FormLogin, FormUser, Login } from '../../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class AuthService {
   public registerUser(formUser:FormUser):Observable<FormUser>{
     return this._httpCliente.post<FormUser>(`${this.baseUrl}/register`,formUser)
   }
-  public login():Observable<any>{
-    return this._httpCliente.post<any>(`${this.baseUrl}/login`);
+  public login(formLogin:FormLogin):Observable<Login>{
+    return this._httpCliente.post<Login>(`${this.baseUrl}/login`,formLogin);
   }
 }

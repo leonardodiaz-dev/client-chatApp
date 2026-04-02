@@ -1,0 +1,9 @@
+.btn-grande {
+  width: 48px !important;
+  height: 48px !important;
+  display: flex;
+  background-color: rgb(37, 99, 235);
+  color: white;
+  align-items: center;
+  justify-content: center;
+}

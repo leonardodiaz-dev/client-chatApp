@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { Chat } from '../../../models/chat.model';
 import { FormsModule } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-chat-window',
-  imports: [FormsModule],
+  imports: [FormsModule,MatIcon],
   templateUrl: './chat-window.component.html',
   styleUrl: './chat-window.component.css',
 })

@@ -1,24 +1,26 @@
 <div class="w-full min-h-screen border-r bg-white flex flex-col">
-  <div class="p-4 font-semibold text-lg">Chats</div>
+  <div class="flex flex-row justify-between items-center p-4">
+    <h3 class="font-semibold text-lg">Chats</h3>
+    <button class="btn-grande" (click)="changeView.emit('newChat')">
+      <mat-icon class="h-56 w-56">add_box</mat-icon>
+    </button>
+  </div>
   <div class="flex flex-row gap-3 px-5 my-2">
-    <button class="px-3 py-1.5 bg-purple-600 text-white rounded-lg">Todos</button>
-    <button class="px-3 py-1.5 bg-purple-600 text-white rounded-lg">No Leidos</button>
+    <button class="px-3 py-1.5 bg-blue-600 text-white rounded-lg">Todos</button>
+    <button class="px-3 py-1.5 bg-blue-600 text-white rounded-lg">No Leidos</button>
   </div>
   <div class="overflow-y-auto flex-1">
     @for (chat of chats; track chat.id) {
-      <div
-        class="p-4 hover:bg-gray-100 cursor-pointer border-b"
-        (click)="selectChat(chat)"
-      >
-        <div class="flex justify-between">
-          <span class="font-medium">{{ chat.name }}</span>
-          <span class="text-xs text-gray-500">{{ chat.lastTime }}</span>
-        </div>
-
-        <div class="text-sm text-gray-500">
-          {{ chat.lastMessage }}
-        </div>
+    <div class="p-4 hover:bg-gray-100 cursor-pointer border-b" (click)="selectChat(chat)">
+      <div class="flex justify-between">
+        <span class="font-medium">{{ chat.name }}</span>
+        <span class="text-xs text-gray-500">{{ chat.lastTime }}</span>
       </div>
+
+      <div class="text-sm text-gray-500">
+        {{ chat.lastMessage }}
+      </div>
+    </div>
     }
   </div>
 </div>

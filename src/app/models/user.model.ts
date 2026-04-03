@@ -15,12 +15,15 @@ export interface FormLogin{
 
 export type View = 'chatList' | 'newChat' | 'newContact';
 
+export interface User{
+    name:string;
+    lastname?:string;
+    username?:string;
+    email:string;
+}
+
 export interface Login {
     message:string;
-    user:{
-        name:string;
-        username:string;
-        email:string;    
-    }
+    user:User;
     token:string;
 }

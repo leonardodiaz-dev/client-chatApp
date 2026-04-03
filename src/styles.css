@@ -19,7 +19,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /* Advertencia */
 .warning-snackbar {
-  --mdc-snackbar-container-color: #ed6c02 !important;
+  --mdc-snackbar-container-color: #ffc107 !important;
   --mdc-snackbar-supporting-text-color: #ffffff !important;
 }
 

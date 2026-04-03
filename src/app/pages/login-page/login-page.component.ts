@@ -41,19 +41,16 @@ export class LoginPageComponent {
         .pipe(finalize(() => this.isSubmitting = false))
         .subscribe({
           next: (res) => {
-            console.log(res);
-            localStorage.setItem('token', res.token);
+            //console.log(res);
+            this.authService.saveToken(res.token);
+            this.authService.saveUser(res.user);
             this.router.navigate(['/chat']);
           },
           error: (err) => {
-             if (err.status === 422) {
+             if (err.status === 401) {
              
-              const validationErrors = err.error.errors;
-
-              const firstKey = Object.keys(validationErrors)[0];
-              const errorMessage = validationErrors[firstKey][0];
-
-              this.notify.showWarning(errorMessage);
+              this.notify.showWarning(err.error.message);
+              
             } else {
               this.notify.showError(
                 'Ocurrió un error inesperado en el servidor',

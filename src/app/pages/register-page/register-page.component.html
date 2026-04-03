@@ -1,5 +1,5 @@
-<div class="h-screen flex items-center justify-center bg-gray-100">
-  <div class="bg-white p-8 rounded-xl shadow-md w-96">
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+  <div class="bg-white p-6 my-5 rounded-xl shadow-md w-full max-w-lg">
     <h2 class="text-2xl font-bold mb-6 text-center">Registro</h2>
 
     <form [formGroup]="formRegister" (ngSubmit)="enviar()">
@@ -10,6 +10,26 @@
           [class.border-red-500]="getError('name')" [class.focus:ring-red-200]="getError('name')" />
         <p *ngIf="getError('name')" class="text-red-500 text-xs mt-1 italic">
           {{ getError("name") }}
+        </p>
+      </div>
+
+       <div class="space-y-1 my-3">
+        <label for="lastname" class="block text-sm font-medium text-gray-700">Apellidos</label>
+        <input type="text" id="lastname" formControlName="lastname" placeholder="Ingresa tus apellidos"
+          class="w-full p-2 border rounded focus:outline-none focus:ring-2 transition-all"
+          [class.border-red-500]="getError('lastname')" [class.focus:ring-red-200]="getError('lastname')" />
+        <p *ngIf="getError('lastname')" class="text-red-500 text-xs mt-1 italic">
+          {{ getError("lastname") }}
+        </p>
+      </div>
+
+       <div class="space-y-1 my-3">
+        <label for="username" class="block text-sm font-medium text-gray-700">Nombre de usuario</label>
+        <input type="text" id="username" formControlName="username" placeholder="Ingresa tu nombre de usuario"
+          class="w-full p-2 border rounded focus:outline-none focus:ring-2 transition-all"
+          [class.border-red-500]="getError('username')" [class.focus:ring-red-200]="getError('username')" />
+        <p *ngIf="getError('username')" class="text-red-500 text-xs mt-1 italic">
+          {{ getError("username") }}
         </p>
       </div>
 
@@ -45,9 +65,10 @@
         </p>
       </div>
 
-      <button type="submit" [disabled]="formRegister.invalid"
+      <button type="submit" [disabled]="formRegister.invalid || isSubmitting"
         class="w-full mt-4 bg-blue-600 text-white p-2 rounded hover:bg-blue-700 disabled:bg-gray-400 transition-colors">
-        Registrarse
+        <span *ngIf="!isSubmitting">Registrate</span>
+        <span *ngIf="isSubmitting">Procesando...</span>
       </button>
     </form>
   </div>

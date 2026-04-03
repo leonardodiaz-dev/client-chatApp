@@ -9,6 +9,9 @@ import {
 } from '@angular/forms';
 import { AuthService } from '../../services/auth/auth.service';
 import { FormUser } from '../../models/user.model';
+import { Router } from '@angular/router';
+import { NotificationService } from '../../services/notification.service';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-register-page',
@@ -18,11 +21,17 @@ import { FormUser } from '../../models/user.model';
 })
 export class RegisterPageComponent {
   private authService = inject(AuthService);
+  private router = inject(Router);
   private form = inject(FormBuilder);
+  private notify = inject(NotificationService);
+
+  isSubmitting: boolean = false;
 
   formRegister = this.form.group(
     {
       name: ['', [Validators.required, Validators.minLength(3)]],
+      lastname: ['', [Validators.required, Validators.maxLength(100)]],
+      username: ['', [Validators.required, Validators.minLength(5)]],
       email: ['', [Validators.email, Validators.required]],
       password: [
         '',
@@ -60,7 +69,9 @@ export class RegisterPageComponent {
       required: 'Este campo es obligatorio',
       email: 'Formato de email inválido',
       minlength: `Mínimo ${control.getError('minlength')?.requiredLength} caracteres`,
-      pattern:'Debe tener: 1 minúscula, 1 mayúscula, 1 número y 1 carácter especial',
+      maxLength: `Maximo ${control.getError('maxlength')?.requiredLength} caracteres`,
+      pattern:
+        'Debe tener: 1 minúscula, 1 mayúscula, 1 número y 1 carácter especial',
       noMatch: 'Las contraseñas no coinciden',
     };
 
@@ -71,21 +82,37 @@ export class RegisterPageComponent {
 
   enviar() {
     if (this.formRegister.valid) {
+      console.log(this.formRegister.getRawValue())
       const data: FormUser = this.formRegister.getRawValue();
+      this.isSubmitting = true;
+      this.authService
+        .registerUser(data)
+        .pipe(finalize(() => (this.isSubmitting = false)))
+        .subscribe({
+          next: (response) => {
+            console.log('Usuario registrado con éxito', response);
+            this.formRegister.reset();
+            this.notify.showSuccess('Usuario registrado con exito');
+            this.router.navigate(['/login']);
+          },
+          error: (err) => {
+            if (err.status === 422) {
+             
+              const validationErrors = err.error.errors;
 
-      this.authService.registerUser(data).subscribe({
-        next: (response) => {
-          console.log('Usuario registrado con éxito', response);
-          this.formRegister.reset();
-          // Aquí podrías redirigir al login o mostrar un mensaje de éxito
-        },
-        error: (err) => {
-          console.error('Error en el registro', err);
-          // Aquí podrías manejar el error 422 de Laravel si el correo ya existe
-        },
-      });
+              const firstKey = Object.keys(validationErrors)[0];
+              const errorMessage = validationErrors[firstKey][0];
+
+              this.notify.showWarning(errorMessage);
+            } else {
+              this.notify.showError(
+                'Ocurrió un error inesperado en el servidor',
+              );
+            }
+          },
+        });
     } else {
-      this.formRegister.markAllAsTouched(); // Marca errores si el usuario da clic sin llenar
+      this.formRegister.markAllAsTouched();
     }
   }
 }

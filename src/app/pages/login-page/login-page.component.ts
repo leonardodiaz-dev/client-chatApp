@@ -10,6 +10,7 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { FormLogin } from '../../models/user.model';
 import { finalize } from 'rxjs';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-login-page',
@@ -21,6 +22,7 @@ export class LoginPageComponent {
   private authService = inject(AuthService);
   private form = inject(FormBuilder);
   private router = inject(Router);
+  private notify = inject(NotificationService);
 
   isSubmitting: boolean = false;
 
@@ -36,7 +38,7 @@ export class LoginPageComponent {
       const data: FormLogin = this.formLogin.getRawValue();
       this.authService
         .login(data)
-        .pipe(finalize(() => (this.isSubmitting = false)))
+        .pipe(finalize(() => this.isSubmitting = false))
         .subscribe({
           next: (res) => {
             console.log(res);
@@ -44,7 +46,19 @@ export class LoginPageComponent {
             this.router.navigate(['/chat']);
           },
           error: (err) => {
-            console.error('Error en el registro', err);
+             if (err.status === 422) {
+             
+              const validationErrors = err.error.errors;
+
+              const firstKey = Object.keys(validationErrors)[0];
+              const errorMessage = validationErrors[firstKey][0];
+
+              this.notify.showWarning(errorMessage);
+            } else {
+              this.notify.showError(
+                'Ocurrió un error inesperado en el servidor',
+              );
+            }
           },
         });
     }

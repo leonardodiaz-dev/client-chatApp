@@ -5,28 +5,29 @@
       <input type="text" matInput placeholder="Buscar usuario" [formControl]="control" [matAutocomplete]="auto" />
 
       <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let user of users" [value]="user.email">
-          {{ user.email }}
+        <mat-option *ngFor="let user of users" (click)="selectUser(user)" [value]="user.email">
+          {{ user.username }}
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
   </div>
 
-  <div class="space-y-1 my-3">
+    <div class="space-y-1 my-3">
     <label for="name" class="block text-sm font-medium text-gray-700">Nombre</label>
     <input type="text" id="name"
       class="w-full p-2 border rounded focus:outline-none focus:ring-2 transition-all"
-     />
+     [(ngModel)]="user.name"/>
   </div>
   <div class="space-y-1 my-3">
     <label for="lastname" class="block text-sm font-medium text-gray-700">Apellido </label>
     <input type="text" id="lastname"
       class="w-full p-2 border rounded focus:outline-none focus:ring-2 transition-all"
-     />
+      [(ngModel)]="user.lastname"/>
   </div>
+ 
 
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button mat-dialog-close>Cancelar</button>
-  <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Confirmar</button>
+  <button mat-button (click)="addContact()" cdkFocusInitial>Agregar</button>
 </mat-dialog-actions>

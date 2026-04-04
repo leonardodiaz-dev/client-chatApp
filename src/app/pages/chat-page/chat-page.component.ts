@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ChatListComponent } from '../../components/chat-list/chat-list.component';
-import { Chat } from '../../../models/chat.model';
 import { ChatWindowComponent } from '../../components/chat-window/chat-window.component';
 import { NewChatComponent } from '../../components/new-chat/new-chat.component';
 import { CommonModule } from '@angular/common';
+import { ConversationService } from '../../services/conversation/conversation.service';
+import { Conversation } from '../../models/conversation.model';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-chat-page',
@@ -12,15 +14,30 @@ import { CommonModule } from '@angular/common';
   styleUrl: './chat-page.component.css',
 })
 
-export class ChatPageComponent {
- 
+export class ChatPageComponent implements OnInit {
+  //  { id: 1, name: 'Ana', lastMessage: 'Hola', lastTime: '10:30' },
+  //   { id: 2, name: 'Carlos', lastMessage: 'Nos vemos', lastTime: '09:15' },
   viewLeft:'chatList' | 'newContact' | 'newChat' = 'chatList';
-  chats: Chat[] = [
-    { id: 1, name: 'Ana', lastMessage: 'Hola', lastTime: '10:30' },
-    { id: 2, name: 'Carlos', lastMessage: 'Nos vemos', lastTime: '09:15' },
-  ];
-  activeConversation: Chat | undefined = undefined;
-  setConversation(chat: Chat) {
+  chats: Conversation[] = [];
+  activeConversation: Conversation | undefined = undefined;
+
+  private conversationService = inject(ConversationService); 
+  private notify = inject(NotificationService)
+
+  ngOnInit(): void {
+    this.conversationService.getAllConversations().subscribe({
+      next:(value) => {
+        console.log(value)
+        this.notify.showSuccess(value.message)
+        this.chats = value.data;
+      },
+      error:(err) => {
+        this.notify.showError('Error al obtener las conversaciones');
+      },
+    })
+  }
+
+  setConversation(chat: Conversation) {
     this.activeConversation = chat;
   }
 }

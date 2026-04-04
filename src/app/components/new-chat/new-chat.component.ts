@@ -14,9 +14,12 @@ export class NewChatComponent {
   dialog = inject(MatDialog);
 
   openDialog() {
-    const dialogRef = this.dialog.open(AddContactModalComponent);
+    const dialogRef = this.dialog.open(AddContactModalComponent, {
+      width: '500px',
+      maxWidth: '90vw',
+    });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log(`Dialog result: ${result}`);
     });
   }

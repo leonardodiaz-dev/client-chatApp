@@ -17,9 +17,9 @@ export type View = 'chatList' | 'newChat' | 'newContact';
 
 export interface User{
     name:string;
-    lastname?:string;
+    lastname:string;
     username?:string;
-    email:string;
+    email?:string;
 }
 
 export interface Login {

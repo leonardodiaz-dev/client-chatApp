@@ -1,8 +1,8 @@
 <div class="flex flex-col flex-1 min-h-screen">
 
-  <!-- @if (conversation) {
+  @if (conversation) {
   <div class="p-4 border-b bg-white font-semibold">
-    {{conversation.name}}
+    {{conversation | chatName}}
   </div>
 
   <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
@@ -30,7 +30,7 @@
       </div>
     </div>
     }
-    }
+  }
   </div>
 
   <div class="p-4 border-t bg-white flex gap-2">
@@ -46,13 +46,14 @@
   }
   @else {
   <div class="flex flex-col justify-center items-center h-screen">
-    <div class="flex flex-row justify-center items-center bg-gray-200 hover:bg-gray-300 w-64 h-32 rounded-lg cursor-pointer gap-3 p-4">
+    <div
+      class="flex flex-row justify-center items-center bg-gray-200 hover:bg-gray-300 w-64 h-32 rounded-lg cursor-pointer gap-3 p-4">
       <button class="btn-grande rounded-lg">
         <mat-icon>person_add</mat-icon>
       </button>
       <p class="text-md">Nuevo Contacto</p>
     </div>
   </div>
-  } -->
+  }
 
 </div>

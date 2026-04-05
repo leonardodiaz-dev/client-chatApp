@@ -10,8 +10,9 @@ export interface Conversation {
     id: number;
     name: string;
     lastname: string;
-  };
+  }[];
 }
+
 export interface ConversationResponse {
   message:string;
   data:Conversation[]

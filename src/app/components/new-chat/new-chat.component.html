@@ -7,13 +7,14 @@
   </div>
   <div class="flex flex-col">
     <div class="flex flex-row items-center hover:bg-gray-200 cursor-pointer gap-3 p-4"
-     (click)="openDialog()">
+     (click)="openDialogAddContact()">
       <button class="btn-grande rounded-lg">
         <mat-icon>person_add</mat-icon>
       </button>
       <p class="text-md">Nuevo Contacto</p>
     </div>
-    <div class="flex flex-row items-center hover:bg-gray-200 cursor-pointer gap-3 p-4">
+    <div class="flex flex-row items-center hover:bg-gray-200 cursor-pointer gap-3 p-4"
+      (click)="openDialogCreateGroup()">
       <button class="btn-grande rounded-lg">
         <mat-icon>group_add</mat-icon>
       </button>

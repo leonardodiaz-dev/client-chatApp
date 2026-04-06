@@ -67,7 +67,8 @@ export class AddContactModalComponent {
 
   addContact() {
     const conversation: FormConversation = {
-      user_id: this.user.id,
+      user_ids: [this.user.id],
+      name:this.user.name,
       type: 'private',
     };
    

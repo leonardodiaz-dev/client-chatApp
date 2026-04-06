@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Conversation, ConversationResponse, FormConversation } from '../../models/conversation.model';
+import { User } from '../../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,11 @@ export class ConversationService {
   public addConversation(conversation:FormConversation):Observable<any>{
     return this._httpClient.post<any>(this.baseUrl,conversation)
   }
-  public getAllConversations():Observable<ConversationResponse>{
-    return this._httpClient.get<ConversationResponse>(this.baseUrl)
+  public getAllConversations():Observable<ConversationResponse<Conversation[]>>{
+    return this._httpClient.get<ConversationResponse<Conversation[]>>(this.baseUrl)
+  }
+
+  public getContacts():Observable<ConversationResponse<User[]>>{
+    return this._httpClient.get<ConversationResponse<User[]>>(`${this.baseUrl}/contact`)
   }
 }

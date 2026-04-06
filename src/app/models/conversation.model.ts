@@ -11,6 +11,8 @@ export interface Conversation {
     name: string;
     lastname: string;
   }[];
+  last_message:string;
+  last_date:string;
 }
 
 export interface ConversationResponse {

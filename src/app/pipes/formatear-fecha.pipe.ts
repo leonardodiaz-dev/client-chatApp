@@ -49,6 +49,6 @@ export class FormatearFechaPipe implements PipeTransform {
     const month = String(messageDate.getMonth() + 1).padStart(2, '0');
     const year = messageDate.getFullYear();
 
-    return `${day}/${month}/${year}`;
+    return date ? `${day}/${month}/${year}` : '';
   }
 }

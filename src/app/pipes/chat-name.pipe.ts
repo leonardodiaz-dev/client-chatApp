@@ -8,12 +8,8 @@ export class ChatNamePipe implements PipeTransform {
 
  transform(chat: Conversation): string {
     if (!chat) return '';
-
-    if (chat.type === 'private') {
-      return chat.users?.[0]?.name || 'Usuario desconocido';
-    }
-
-    return '' ;
+    
+    return chat.name ;
   }
 
 }

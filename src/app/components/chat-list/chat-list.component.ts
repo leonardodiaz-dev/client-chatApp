@@ -11,10 +11,11 @@ import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { AuthService } from '../../services/auth/auth.service';
 import { Conversation } from '../../models/conversation.model';
 import { ChatNamePipe } from '../../pipes/chat-name.pipe';
+import { FormatearFechaPipe } from '../../pipes/formatear-fecha.pipe';
 
 @Component({
   selector: 'app-chat-list',
-  imports: [MatIcon, MatMenuTrigger, MatMenuModule,ChatNamePipe],
+  imports: [MatIcon, MatMenuTrigger, MatMenuModule,ChatNamePipe,FormatearFechaPipe],
   templateUrl: './chat-list.component.html',
   styleUrl: './chat-list.component.css',
 })

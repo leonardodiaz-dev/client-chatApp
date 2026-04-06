@@ -22,11 +22,11 @@
     <div class="p-4 hover:bg-gray-100 cursor-pointer border-b" (click)="selectChat(chat)">
       <div class="flex justify-between">
        <span class="font-medium">{{ chat | chatName}}</span>
-        <span class="text-xs text-gray-500"></span>
+        <span class="text-xs text-gray-500">{{chat.last_date | formatearFecha}}</span>
       </div>
 
       <div class="text-sm text-gray-500">
-    
+        {{chat.last_message}}
       </div>
     </div>
     }

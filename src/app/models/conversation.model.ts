@@ -1,21 +1,18 @@
 export interface FormConversation {
   type: 'private' | 'group';
-  user_id: number;
+  name:string;
+  user_ids: number[];
 }
 
 export interface Conversation {
   id: number;
   type: 'private' | 'group';
-  users: {
-    id: number;
-    name: string;
-    lastname: string;
-  }[];
+  name:string;
   last_message:string;
   last_date:string;
 }
 
-export interface ConversationResponse {
+export interface ConversationResponse<T> {
   message:string;
-  data:Conversation[]
+  data:T
 }

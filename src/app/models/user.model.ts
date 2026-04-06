@@ -16,6 +16,7 @@ export interface FormLogin{
 export type View = 'chatList' | 'newChat' | 'newContact';
 
 export interface User{
+    id:number;
     name:string;
     lastname:string;
     username?:string;

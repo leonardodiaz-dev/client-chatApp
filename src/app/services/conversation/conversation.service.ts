@@ -12,8 +12,8 @@ export class ConversationService {
   private _httpClient = inject(HttpClient)
   private baseUrl = 'http://127.0.0.1:8000/api/conversations'
 
-  public addConversation(conversation:FormConversation):Observable<any>{
-    return this._httpClient.post<any>(this.baseUrl,conversation)
+  public addConversation(formData:FormData):Observable<any>{
+    return this._httpClient.post<any>(this.baseUrl,formData)
   }
   public getAllConversations():Observable<ConversationResponse<Conversation[]>>{
     return this._httpClient.get<ConversationResponse<Conversation[]>>(this.baseUrl)

@@ -2,10 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import {
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { User } from '../../models/user.model';
@@ -13,7 +10,6 @@ import { UserService } from '../../services/user/user.service';
 import { MatOptionModule } from '@angular/material/core';
 import { CommonModule } from '@angular/common';
 import { ConversationService } from '../../services/conversation/conversation.service';
-import { FormConversation } from '../../models/conversation.model';
 import { NotificationService } from '../../services/notification.service';
 
 @Component({
@@ -60,19 +56,18 @@ export class AddContactModalComponent {
   }
 
   selectUser(user: any) {
-    this.user.id = user.id
+    this.user.id = user.id;
     this.user.name = user.name;
     this.user.lastname = user.lastname;
   }
 
   addContact() {
-    const conversation: FormConversation = {
-      user_ids: [this.user.id],
-      name:this.user.name,
-      type: 'private',
-    };
-   
-    this.conversationService.addConversation(conversation).subscribe({
+    const formData = new FormData();
+    formData.append('name', this.user.name);
+    formData.append('type', 'private');
+    formData.append('user_ids', this.user.id.toString());
+
+    this.conversationService.addConversation(formData).subscribe({
       next: (value) => {
         this.notify.showSuccess(value.message);
         this.dialogRef.close();

@@ -1,6 +1,6 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ConversationService } from '../../services/conversation/conversation.service';
 import { User } from '../../models/user.model';
 import { NotificationService } from '../../services/notification.service';
@@ -15,6 +15,7 @@ import { FormsModule } from '@angular/forms';
 export class CreateGroupComponent implements OnInit {
   private _conversationService = inject(ConversationService);
   private _notify = inject(NotificationService);
+  private dialogRef = inject(MatDialogRef<CreateGroupComponent>);
 
   groupName: string = '';
   selectedFile: File | null = null;
@@ -50,17 +51,17 @@ export class CreateGroupComponent implements OnInit {
 
   toggleMember(user: User): void {
     const currentSelected = this.selectedMembers();
-    const index = currentSelected.findIndex(u => u.id === user.id);
+    const index = currentSelected.findIndex((u) => u.id === user.id);
 
     if (index === -1) {
       this.selectedMembers.set([...currentSelected, user]);
     } else {
-      this.selectedMembers.set(currentSelected.filter(u => u.id !== user.id));
+      this.selectedMembers.set(currentSelected.filter((u) => u.id !== user.id));
     }
   }
 
   isMember(user: User): boolean {
-    return this.selectedMembers().some(u => u.id === user.id);
+    return this.selectedMembers().some((u) => u.id === user.id);
   }
 
   ngOnInit(): void {
@@ -76,11 +77,27 @@ export class CreateGroupComponent implements OnInit {
   }
 
   addGroup() {
-    // const newConversation:FormConversation = {
-    //   user_ids: [this.user.id],
-    //   name: this.user.name,
-    //   type: 'private',
-    // };
-    // this._conversationService.addConversation().subscribe({});
+    const formData = new FormData();
+    formData.append('name', this.groupName);
+    formData.append('type', 'group');
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    }
+    const members = this.selectedMembers().map((u) => u.id);
+    formData.append('user_ids', members.join(','));
+
+    console.log('Enviando FormData a Laravel...');
+    formData.forEach((value, key) => {
+      console.log(`${key}:`, value);
+    });
+    this._conversationService.addConversation(formData).subscribe({
+      next: (value) => {
+        this._notify.showSuccess('Grupo creado exitosamente');
+        this.dialogRef.close();
+      },
+      error: (err) => {
+        this._notify.showError('Ocurrio un error inesperado');
+      },
+    });
   }
 }

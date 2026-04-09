@@ -86,13 +86,10 @@ export class CreateGroupComponent implements OnInit {
     const members = this.selectedMembers().map((u) => u.id);
     formData.append('user_ids', members.join(','));
 
-    console.log('Enviando FormData a Laravel...');
-    formData.forEach((value, key) => {
-      console.log(`${key}:`, value);
-    });
     this._conversationService.addConversation(formData).subscribe({
       next: (value) => {
         this._notify.showSuccess('Grupo creado exitosamente');
+        this._conversationService.notifyConversationCreated();
         this.dialogRef.close();
       },
       error: (err) => {

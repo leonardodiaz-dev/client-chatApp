@@ -39,7 +39,7 @@ export class AddContactModalComponent {
   };
 
   private userService = inject(UserService);
-  private conversationService = inject(ConversationService);
+  private _conversationService = inject(ConversationService);
   private dialogRef = inject(MatDialogRef<AddContactModalComponent>);
   private notify = inject(NotificationService);
 
@@ -67,9 +67,10 @@ export class AddContactModalComponent {
     formData.append('type', 'private');
     formData.append('user_ids', this.user.id.toString());
 
-    this.conversationService.addConversation(formData).subscribe({
+    this._conversationService.addConversation(formData).subscribe({
       next: (value) => {
         this.notify.showSuccess(value.message);
+        this._conversationService.notifyConversationCreated();
         this.dialogRef.close();
       },
       error: (err) => {

@@ -3,7 +3,7 @@ export interface Message {
     id:number;
     content:string;
     mine:boolean;
-    time:string;
+    date:string;
 }
 
 export interface SendMessage{

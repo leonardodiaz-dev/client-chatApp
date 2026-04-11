@@ -13,36 +13,105 @@ import { MessageService } from '../../services/message/message.service';
 import { NotificationService } from '../../services/notification.service';
 import { ChatNamePipe } from '../../pipes/chat-name.pipe';
 import { ConversationService } from '../../services/conversation/conversation.service';
+import { EchoService } from '../../services/echo/echo.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-chat-window',
-  imports: [FormsModule, MatIcon, ChatNamePipe],
+  imports: [FormsModule, MatIcon, ChatNamePipe, CommonModule],
   templateUrl: './chat-window.component.html',
   styleUrl: './chat-window.component.css',
 })
 export class ChatWindowComponent implements OnChanges {
   @Input() conversation: Conversation | undefined = undefined;
   messages: Message[] = [];
-
+  loadingMessages = true;
   newMessage: string = '';
   private _messageService = inject(MessageService);
   private _conversationService = inject(ConversationService);
   private _notify = inject(NotificationService);
+  private _echoService = inject(EchoService);
+  private channel: any;
+
+  userStorage = localStorage.getItem('user');
+  currentUser = this.userStorage ? JSON.parse(this.userStorage) : null;
+
+  markAsRead(conversationId: number) {
+    this._messageService.readMessage(conversationId).subscribe();
+  }
+
+  private currentChannel: any;
+  private previousConversationId: number | null = null;
+
+  listenEvents() {
+    this.currentChannel.listen('.MessageSent', (e: any) => {
+      console.log('mensaje recibido', e);
+
+      const nuevoMensaje = {
+        ...e.message,
+        mine: e.message.user_id === this.currentUser.id,
+      };
+
+      this.messages.push(nuevoMensaje);
+
+      this._messageService.deliveredMessage(e.message.id).subscribe();
+    });
+
+    this.currentChannel.listen('.MessageDelivered', (e: any) => {
+      const msg = this.messages.find((m) => m.id === e.messageId);
+
+      if (msg) {
+        msg.status = 'entregado';
+      }
+    });
+
+    this.currentChannel.listen('.MessageRead', (e: any) => {
+      this.messages.forEach((msg) => {
+        if (msg.status === 'entregado') {
+          msg.status = 'leido';
+        }
+      });
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['conversation'] && changes['conversation'].currentValue) {
+    if (changes['conversation'] && this.conversation?.id) {
+      const echo = this._echoService.getEcho();
+
+      if (this.previousConversationId) {
+        echo.leave(`chat.${this.previousConversationId}`);
+      }
+
+      this.previousConversationId = this.conversation.id;
+
+      this.currentChannel = echo.private(`chat.${this.conversation.id}`);
+
+      this.listenEvents();
+
       this.loadMessages();
+      this.markAsRead(this.conversation.id);
+    }
+  }
+
+  ngOnDestroy() {
+    const echo = this._echoService.getEcho();
+
+    if (this.conversation?.id) {
+      echo.leave(`chat.${this.conversation.id}`);
     }
   }
 
   loadMessages(): void {
     if (!this.conversation) return;
+    this.loadingMessages = true;
     this._messageService.getMessages(this.conversation.id).subscribe({
       next: (value) => {
-        //console.log(value.data);
+        console.log(value.data);
         this.messages = value.data;
         this._notify.showSuccess(value.message);
+        this.loadingMessages = false;
       },
+      error: () => (this.loadingMessages = false),
     });
   }
 

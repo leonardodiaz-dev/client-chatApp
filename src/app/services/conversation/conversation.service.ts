@@ -4,6 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import {
   Conversation,
   ConversationResponse,
+  ConversationWithCount,
 } from '../../models/conversation.model';
 import { User } from '../../models/user.model';
 
@@ -31,12 +32,17 @@ export class ConversationService {
   public addConversation(formData: FormData): Observable<any> {
     return this._httpClient.post<any>(this.baseUrl, formData);
   }
+
   public getAllConversations(): Observable<
     ConversationResponse<Conversation[]>
   > {
     return this._httpClient.get<ConversationResponse<Conversation[]>>(
       this.baseUrl,
     );
+  }
+  
+  public getUnReadConversations():Observable<ConversationWithCount[]>{
+    return this._httpClient.get<ConversationWithCount[]>(`${this.baseUrl}/unread`)
   }
 
   public getContacts(): Observable<ConversationResponse<User[]>> {

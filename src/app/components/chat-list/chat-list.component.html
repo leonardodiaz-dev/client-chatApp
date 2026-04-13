@@ -14,19 +14,30 @@
     </div>
   </div>
   <div class="flex flex-row gap-3 px-5 my-2">
-    <button class="px-3 py-1.5 bg-blue-600 text-white rounded-lg">Todos</button>
-    <button class="px-3 py-1.5 bg-blue-600 text-white rounded-lg">No Leidos</button>
+    <button [ngClass]="filtro === 'todos' ? 'bg-blue-600' : 'bg-blue-300'" class="px-3 py-1.5 text-white rounded-lg"
+      (click)="setFiltro('todos')">
+      Todos
+    </button>
+
+    <button [ngClass]="filtro === 'no leidos' ? 'bg-blue-600' : 'bg-blue-300'" class="px-3 py-1.5 text-white rounded-lg"
+      (click)="setFiltro('no leidos')">
+      No Leidos
+    </button>
   </div>
   <div class="overflow-y-auto flex-1">
     @for (chat of chats; track chat.id) {
     <div class="p-4 hover:bg-gray-100 cursor-pointer border-b" (click)="selectChat(chat)">
       <div class="flex justify-between">
-       <span class="font-medium">{{ chat | chatName}}</span>
+        <span class="font-medium">{{ chat | chatName}}</span>
         <span class="text-xs text-gray-500">{{chat.last_date | formatearFecha}}</span>
       </div>
 
-      <div class="text-sm text-gray-500">
-        {{chat.last_message}}
+      <div class="flex flex-row justify-between items-center text-sm text-gray-500">
+       <span> {{chat.last_message}}</span>
+        <span *ngIf="chat.messages_count"
+          class="flex items-center justify-center bg-blue-500 text-white size-7 rounded-full text-xs font-bold">
+          {{ chat.messages_count }}
+        </span>
       </div>
     </div>
     }

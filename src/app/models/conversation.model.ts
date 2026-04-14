@@ -10,15 +10,8 @@ export interface Conversation {
   name: string;
   last_message: string;
   last_date: string;
-}
-
-export interface ConversationWithCount {
-  id: number;
-  type: 'private' | 'group';
-  name: string;
-  last_message: string;
-  last_date: string;
-  messages_count:number;
+  messages_count?:number;
+  avatar:string;
 }
 
 export interface ConversationResponse<T> {

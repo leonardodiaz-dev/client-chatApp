@@ -1,8 +1,11 @@
 <div class="flex flex-col flex-1 h-full">
 
   @if (conversation) {
-  <div class="p-4 border-b bg-white font-semibold">
-    {{conversation | chatName}}
+  <div class="flex flex-row justify-start items-center gap-5 p-4 border-b bg-white font-semibold">
+    <img [src]="storageUrl + conversation.avatar" alt="Avatar"
+      class="size-10 rounded-full object-cover"
+       (click)="toggleInfoPanel()">
+    <p>{{conversation | chatName}}</p>
   </div>
 
   <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
@@ -73,7 +76,8 @@
   @else {
   <div class="flex flex-col justify-center items-center h-screen">
     <div
-      class="flex flex-row justify-center items-center bg-gray-200 hover:bg-gray-300 w-64 h-32 rounded-lg cursor-pointer gap-3 p-4">
+      class="flex flex-row justify-center items-center bg-gray-200 hover:bg-gray-300 w-64 h-32 rounded-lg cursor-pointer gap-3 p-4"
+      (click)="openDialogAddContact()">
       <button class="btn-grande rounded-lg">
         <mat-icon>person_add</mat-icon>
       </button>
@@ -81,5 +85,50 @@
     </div>
   </div>
   }
+</div>
+@if (showInfoPanel && conversation) {
+<div class="fixed top-0 right-0 w-80 h-full bg-white border-l shadow-lg z-50 flex flex-col">
+
+  <div class="flex justify-between items-center p-4 border-b">
+    <p class="font-semibold">Información</p>
+    <button (click)="toggleInfoPanel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="flex flex-col items-center p-6 gap-3">
+
+    <img 
+      [src]="storageUrl + conversation.avatar"
+      class="w-24 h-24 rounded-full object-cover">
+
+    <p class="text-lg font-semibold">
+      {{conversation | chatName}}
+    </p>
+
+    @if (conversation.type === 'group') {
+      <p class="text-gray-500 text-sm">
+        Grupo
+      </p>
+
+      <div class="w-full mt-4">
+        <p class="font-semibold mb-2">Participantes</p>
+
+        @for (user of conversation.users; track user.id) {
+        <div class="flex items-center gap-3 p-2 hover:bg-gray-100 rounded">
+          <!-- <img [src]="storageUrl + user.avatar" class="size-8 rounded-full"> -->
+          <span>{{user.name}}</span>
+        </div>
+        }
+      </div>
+    }
+    @else {
+      <p class="text-gray-500 text-sm">
+        Chat privado
+      </p>
+    }
+
+  </div>
 
 </div>
+}

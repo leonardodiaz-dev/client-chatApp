@@ -15,6 +15,9 @@ import { ChatNamePipe } from '../../pipes/chat-name.pipe';
 import { ConversationService } from '../../services/conversation/conversation.service';
 import { EchoService } from '../../services/echo/echo.service';
 import { CommonModule } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { AddContactModalComponent } from '../add-contact-modal/add-contact-modal.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-chat-window',
@@ -27,11 +30,18 @@ export class ChatWindowComponent implements OnChanges {
   messages: Message[] = [];
   loadingMessages = true;
   newMessage: string = '';
+  showInfoPanel = false;
+  storageUrl = environment.storageUrl;
+
   private _messageService = inject(MessageService);
   private _conversationService = inject(ConversationService);
   private _notify = inject(NotificationService);
   private _echoService = inject(EchoService);
-  private channel: any;
+
+  toggleInfoPanel() {
+    this.showInfoPanel = !this.showInfoPanel;
+    this.loadConversation();
+  }
 
   userStorage = localStorage.getItem('user');
   currentUser = this.userStorage ? JSON.parse(this.userStorage) : null;
@@ -101,12 +111,24 @@ export class ChatWindowComponent implements OnChanges {
     }
   }
 
+  loadConversation(){
+    if(this.conversation?.id){
+      this._conversationService.getConversationById(this.conversation.id).subscribe({
+        next:(value) => {
+          this.conversation = value
+        },
+        error:(err) => {
+          console.log('Ocurrio un error')
+        },
+      })
+    }
+  }
+
   loadMessages(): void {
     if (!this.conversation) return;
     this.loadingMessages = true;
     this._messageService.getMessages(this.conversation.id).subscribe({
       next: (value) => {
-        console.log(value.data);
         this.messages = value.data;
         this._notify.showSuccess(value.message);
         this.loadingMessages = false;
@@ -176,5 +198,18 @@ export class ChatWindowComponent implements OnChanges {
       hour12: true,
     });
     return hora12;
+  }
+
+  dialog = inject(MatDialog);
+
+  openDialogAddContact() {
+    const dialogRef = this.dialog.open(AddContactModalComponent, {
+      width: '500px',
+      maxWidth: '90vw',
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(`Dialog result: ${result}`);
+    });
   }
 }

@@ -3,8 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import {
   Conversation,
-  ConversationResponse,
-  ConversationWithCount,
+  ConversationResponse
 } from '../../models/conversation.model';
 import { User } from '../../models/user.model';
 
@@ -40,9 +39,13 @@ export class ConversationService {
       this.baseUrl,
     );
   }
+
+  public getConversationById($idConversation:number):Observable<Conversation>{
+    return  this._httpClient.get<Conversation>(`${this.baseUrl}/${$idConversation}`)
+  }
   
-  public getUnReadConversations():Observable<ConversationWithCount[]>{
-    return this._httpClient.get<ConversationWithCount[]>(`${this.baseUrl}/unread`)
+  public getUnReadConversations():Observable<Conversation[]>{
+    return this._httpClient.get<Conversation[]>(`${this.baseUrl}/unread`)
   }
 
   public getContacts(): Observable<ConversationResponse<User[]>> {

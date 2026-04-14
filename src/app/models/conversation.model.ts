@@ -1,3 +1,5 @@
+import { User } from "./user.model";
+
 export interface FormConversation {
   type: 'private' | 'group';
   name: string;
@@ -12,6 +14,7 @@ export interface Conversation {
   last_date: string;
   messages_count?:number;
   avatar:string;
+  users?:User[]
 }
 
 export interface ConversationResponse<T> {

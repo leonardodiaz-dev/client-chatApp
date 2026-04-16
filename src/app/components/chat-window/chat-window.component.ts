@@ -115,6 +115,7 @@ export class ChatWindowComponent implements OnChanges {
     if(this.conversation?.id){
       this._conversationService.getConversationById(this.conversation.id).subscribe({
         next:(value) => {
+          console.log(value)
           this.conversation = value
         },
         error:(err) => {

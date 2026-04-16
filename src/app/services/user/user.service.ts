@@ -13,4 +13,7 @@ export class UserService {
   public searchUser(busqueda:string):Observable<User[]>{
     return this._httpCliente.get<User[]>(`${this.baseUrl}/find-user/${busqueda}`)
   }
+  public putUser(formData:FormData):Observable<User>{
+    return this._httpCliente.post<User>(this.baseUrl,formData)
+  }
 }

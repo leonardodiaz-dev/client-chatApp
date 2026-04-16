@@ -21,6 +21,7 @@ export interface User{
     lastname:string;
     username?:string;
     email?:string;
+    avatar?:string;
 }
 
 export interface Login {

@@ -5,10 +5,12 @@
       <button class="btn-grande" (click)="changeView.emit('newChat')">
         <mat-icon>add_box</mat-icon>
       </button>
-      <button class="btn-grande" [matMenuTriggerFor]="menu" #menuTrigger>
+      <button class="btn-grande" [matMenuTriggerFor]="menu" #menuTrigger="matMenuTrigger">
         <mat-icon>more_vert</mat-icon>
       </button>
+
       <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="perfil()">Perfil</button>
         <button mat-menu-item (click)="logout()">Cerrar Sesión</button>
       </mat-menu>
     </div>
@@ -47,3 +49,7 @@
     <div class="flex justify-center items-center h-full" *ngIf="chats.length === 0">No se encontraron chats</div>
   </div>
 </div>
+<app-perfil 
+  (changePerfilModal)="setShowModal($event)" 
+  [showProfileModal]="showProfileModal" 
+/>

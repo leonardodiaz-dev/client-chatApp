@@ -16,6 +16,7 @@ import { FormatearFechaPipe } from '../../pipes/formatear-fecha.pipe';
 import { ConversationService } from '../../services/conversation/conversation.service';
 import { CommonModule } from '@angular/common';
 import { finalize, Subject, takeUntil } from 'rxjs';
+import { PerfilComponent } from "../perfil/perfil.component";
 
 @Component({
   selector: 'app-chat-list',
@@ -26,7 +27,8 @@ import { finalize, Subject, takeUntil } from 'rxjs';
     ChatNamePipe,
     FormatearFechaPipe,
     CommonModule,
-  ],
+    PerfilComponent
+],
   templateUrl: './chat-list.component.html',
   styleUrl: './chat-list.component.css',
 })
@@ -40,6 +42,7 @@ export class ChatListComponent implements OnInit {
   private destroy$ = new Subject<void>();
 
   filtro: string = 'todos';
+  showProfileModal:boolean = false;
   loading: boolean = false;
 
   setFiltro(value: string) {
@@ -116,4 +119,12 @@ export class ChatListComponent implements OnInit {
   menuTrigger = viewChild.required(MatMenuTrigger);
 
   logout = () => this.authService.logout();
+  
+  setShowModal($event:any){
+    this.showProfileModal = $event;
+  }
+
+  perfil(){
+    this.showProfileModal = true;
+  }
 }

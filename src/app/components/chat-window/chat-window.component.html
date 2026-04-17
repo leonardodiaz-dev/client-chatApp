@@ -105,9 +105,9 @@
     </button>
   </div>
 
-  <div class="flex flex-col items-center p-6 gap-3">
+  <div class="flex flex-col items-center p-6 gap-3 overflow-y-auto">
 
-    <div  class="w-32 h-32 flex items-center justify-center rounded-full overflow-hidden bg-gray-200">
+    <div class="w-32 h-32 flex items-center justify-center rounded-full overflow-hidden bg-gray-200">
       @if (conversation.avatar) {
       <img [src]="storageUrl + conversation.avatar" class="w-full h-full rounded-full object-cover">
       }@else {
@@ -126,6 +126,14 @@
     <p class="text-gray-500 text-sm">
       Grupo
     </p>
+
+    <div class="flex flex-col justify-center items-center cursor-pointer border border-gray-300 p-2 w-24 rounded-lg"
+     (click)=" openDialogAddParticipantes()">
+      <mat-icon class="text-gray-400">
+        person_add
+      </mat-icon>
+      <p class="text-sm">Añadir</p>
+    </div>
 
     <div class="w-full mt-5">
 

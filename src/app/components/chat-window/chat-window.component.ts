@@ -18,6 +18,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { AddContactModalComponent } from '../add-contact-modal/add-contact-modal.component';
 import { environment } from '../../../environments/environment';
+import { AnadirParticipanteComponent } from '../anadir-participante/anadir-participante.component';
 
 @Component({
   selector: 'app-chat-window',
@@ -37,6 +38,22 @@ export class ChatWindowComponent implements OnChanges {
   private _conversationService = inject(ConversationService);
   private _notify = inject(NotificationService);
   private _echoService = inject(EchoService);
+
+  dialog = inject(MatDialog);
+
+  openDialogAddParticipantes() {
+    const dialogRef = this.dialog.open(AnadirParticipanteComponent, {
+      width: '500px',
+      maxWidth: '90vw',
+      data:{
+        conversationId: this.conversation?.id,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
 
   toggleInfoPanel() {
     this.showInfoPanel = !this.showInfoPanel;
@@ -200,9 +217,7 @@ export class ChatWindowComponent implements OnChanges {
     });
     return hora12;
   }
-
-  dialog = inject(MatDialog);
-
+  
   openDialogAddContact() {
     const dialogRef = this.dialog.open(AddContactModalComponent, {
       width: '500px',

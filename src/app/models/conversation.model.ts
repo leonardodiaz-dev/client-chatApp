@@ -17,6 +17,11 @@ export interface Conversation {
   users?:User[]
 }
 
+export interface UpdateConversation {
+  conversation_id:string;
+  user_ids:string;
+}
+
 export interface ConversationResponse<T> {
   message: string;
   data: T;

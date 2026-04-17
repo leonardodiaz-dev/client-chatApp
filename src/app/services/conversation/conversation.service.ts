@@ -3,7 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import {
   Conversation,
-  ConversationResponse
+  ConversationResponse,
+  UpdateConversation
 } from '../../models/conversation.model';
 import { User } from '../../models/user.model';
 
@@ -52,5 +53,11 @@ export class ConversationService {
     return this._httpClient.get<ConversationResponse<User[]>>(
       `${this.baseUrl}/contact`,
     );
+  }
+  public getOtherUsersByConversation(idConversation:number):Observable<User[]>{
+    return this._httpClient.get<User[]>(`${this.baseUrl}/users/${idConversation}`)
+  }
+  public putConversation(formUpdate:UpdateConversation):Observable<any>{
+    return this._httpClient.put<any>(this.baseUrl,formUpdate);
   }
 }

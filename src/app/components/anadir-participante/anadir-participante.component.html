@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>Añadir Participantes</h2>
+<mat-dialog-content>
+
+    <div class="mb-4">
+        <input type="text" placeholder="Buscar contacto..."
+            class="w-full p-2 border rounded-full text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+            [ngModel]="search()" (ngModelChange)="search.set($event)" />
+    </div>
+
+    <div class="flex flex-col gap-1 max-h-52 overflow-y-auto pr-2">
+      @if (filteredContacts().length) {
+          @for (contact of filteredContacts(); track contact.id) {
+        <div (click)="toggleMember(contact)" [class.bg-blue-50]="isMember(contact)"
+            class="flex items-center justify-between hover:bg-gray-100 cursor-pointer rounded-md p-3 transition-all">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
+                    {{ contact.name[0] }}{{ contact.lastname[0] }}
+                </div>
+                <p class="text-sm font-medium text-gray-700">{{contact.name}} {{contact.lastname}}</p>
+            </div>
+            <input type="checkbox" [checked]="isMember(contact)" class="rounded text-blue-600">
+        </div>
+        }
+      }@else {
+        <p class="text-center text-sm">No se encontraron contactos</p>
+      }
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-raised-button color="primary" (click)="addParticipantes()" [disabled]="selectedMembers().length === 0 || isLoading">
+        Añadir
+    </button>
+</mat-dialog-actions>

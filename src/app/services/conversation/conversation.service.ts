@@ -60,4 +60,7 @@ export class ConversationService {
   public putConversation(formUpdate:UpdateConversation):Observable<any>{
     return this._httpClient.put<any>(this.baseUrl,formUpdate);
   }
+  public deleteParticipante(idConversation:number,userId:number):Observable<any>{
+    return this._httpClient.delete<any>(`${this.baseUrl}/${idConversation}/user/${userId}`)
+  }
 }

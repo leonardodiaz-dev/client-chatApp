@@ -6,7 +6,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatIcon } from '@angular/material/icon';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { Conversation } from '../../models/conversation.model';
 import { Message, SendMessage } from '../../models/message.model';
 import { MessageService } from '../../services/message/message.service';
@@ -19,10 +19,19 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddContactModalComponent } from '../add-contact-modal/add-contact-modal.component';
 import { environment } from '../../../environments/environment';
 import { AnadirParticipanteComponent } from '../anadir-participante/anadir-participante.component';
+import { User } from '../../models/user.model';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-chat-window',
-  imports: [FormsModule, MatIcon, ChatNamePipe, CommonModule],
+  imports: [
+    FormsModule,
+    MatIcon,
+    ChatNamePipe,
+    CommonModule,
+    MatIconModule,
+    MatMenuModule,
+  ],
   templateUrl: './chat-window.component.html',
   styleUrl: './chat-window.component.css',
 })
@@ -45,9 +54,9 @@ export class ChatWindowComponent implements OnChanges {
     const dialogRef = this.dialog.open(AnadirParticipanteComponent, {
       width: '500px',
       maxWidth: '90vw',
-      data:{
+      data: {
         conversationId: this.conversation?.id,
-      }
+      },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
@@ -62,6 +71,7 @@ export class ChatWindowComponent implements OnChanges {
 
   userStorage = localStorage.getItem('user');
   currentUser = this.userStorage ? JSON.parse(this.userStorage) : null;
+  currentRole: string | undefined = '';
 
   markAsRead(conversationId: number) {
     this._messageService.readMessage(conversationId).subscribe();
@@ -128,17 +138,23 @@ export class ChatWindowComponent implements OnChanges {
     }
   }
 
-  loadConversation(){
-    if(this.conversation?.id){
-      this._conversationService.getConversationById(this.conversation.id).subscribe({
-        next:(value) => {
-          console.log(value)
-          this.conversation = value
-        },
-        error:(err) => {
-          console.log('Ocurrio un error')
-        },
-      })
+  loadConversation() {
+    if (this.conversation?.id) {
+      this._conversationService
+        .getConversationById(this.conversation.id)
+        .subscribe({
+          next: (value) => {
+            // console.log(value)
+            this.conversation = value;
+            const finUser: User | undefined = this.conversation?.users?.find(
+              (u) => u.id === this.currentUser.id,
+            );
+            this.currentRole = finUser ? finUser.role : '';
+          },
+          error: (err) => {
+            console.log('Ocurrio un error');
+          },
+        });
     }
   }
 
@@ -187,6 +203,24 @@ export class ChatWindowComponent implements OnChanges {
       },
     });
   }
+
+  removeUser(userId:number){
+    if(this.conversation?.id){
+      this._conversationService.deleteParticipante(this.conversation.id,userId).subscribe({
+        next:(value) => {
+            if(this.conversation){
+              const filterUser = this.conversation.users?.filter(u => u.id !== userId)
+              this.conversation.users = filterUser
+            }
+            this._notify.showSuccess('Participante eliminado con exito');
+        },
+        error:(err) => {
+          console.log('Ocurrio un error al eliminar el participante')
+        },
+      })
+    }
+  }
+
   getDay(date: string) {
     const d = new Date(date);
     return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
@@ -217,7 +251,7 @@ export class ChatWindowComponent implements OnChanges {
     });
     return hora12;
   }
-  
+
   openDialogAddContact() {
     const dialogRef = this.dialog.open(AddContactModalComponent, {
       width: '500px',

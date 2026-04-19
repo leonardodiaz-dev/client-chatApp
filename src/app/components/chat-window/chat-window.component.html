@@ -96,101 +96,95 @@
   }
 </div>
 @if (showInfoPanel && conversation) {
-<div class="fixed top-0 right-0 w-80 h-full bg-white border-l shadow-lg z-50 flex flex-col">
+<div class="fixed top-0 right-0 w-80 h-full bg-white border-l shadow-xl z-50 flex flex-col">
 
-  <div class="flex justify-between items-center p-4 border-b">
-    <p class="font-semibold">Información</p>
-    <button (click)="toggleInfoPanel()">
+  <div class="flex justify-between items-center p-4 border-b shrink-0">
+    <p class="font-semibold text-gray-800">Información</p>
+    <button (click)="toggleInfoPanel()" class="hover:bg-gray-100 rounded-full p-1 transition">
       <mat-icon>close</mat-icon>
     </button>
   </div>
 
-  <div class="flex flex-col items-center p-6 gap-3 overflow-y-auto">
+  <div class="flex flex-col items-center p-6 gap-3 border-b shrink-0">
 
-    <div class="w-32 h-32 flex items-center justify-center rounded-full overflow-hidden bg-gray-200">
+    <div class="w-28 h-28 rounded-full overflow-hidden bg-gray-200 shadow-sm">
       @if (conversation.avatar) {
-      <img [src]="storageUrl + conversation.avatar" class="w-full h-full rounded-full object-cover">
-      }@else {
+      <img [src]="storageUrl + conversation.avatar" class="w-full h-full object-cover">
+      } @else {
       <mat-icon class="text-gray-400"
-        style="width: 100%; height: 100%; font-size: 150px; display: flex; align-items: center; justify-content: center;">
+        style="width:100%;height:100%;font-size:120px;display:flex;align-items:center;justify-content:center;">
         account_circle
       </mat-icon>
       }
     </div>
 
-    <p class="text-lg font-semibold">
+    <p class="text-lg font-semibold text-center">
       {{conversation | chatName}}
     </p>
 
     @if (conversation.type === 'group') {
-    <p class="text-gray-500 text-sm">
-      Grupo
+    <p class="text-gray-500 text-sm">Grupo</p>
+
+    <button class="flex items-center gap-2 px-3 py-2 border rounded-lg text-sm transition" [ngClass]="{
+          'opacity-50 cursor-not-allowed': currentRole !== 'admin',
+          'hover:bg-gray-100': currentRole === 'admin'
+        }" (click)="currentRole === 'admin' && openDialogAddParticipantes()">
+      <mat-icon>person_add</mat-icon>
+      Añadir participante
+    </button>
+    }
+  </div>
+
+  <div class="flex-1 overflow-y-auto px-3 py-4">
+
+    <p class="text-sm font-semibold text-gray-600 mb-3 px-2">
+      Participantes
     </p>
 
-    <div [ngClass]="{
-      'cursor-not-allowed opacity-50': currentRole !== 'admin',
-      'cursor-pointer': currentRole === 'admin'
-      }" class="flex flex-col justify-center items-center border border-gray-300 p-2 w-24 rounded-lg"
-      (click)="currentRole === 'admin' && openDialogAddParticipantes()">
-      <mat-icon class="text-gray-400">
-        person_add
-      </mat-icon>
-      <p class="text-sm">Añadir</p>
-    </div>
-    <div class="w-full mt-5">
+    <div class="flex flex-col gap-1">
+      @for (user of conversation.users; track user.id) {
 
-      <p class="text-sm font-semibold text-gray-600 mb-3">
-        Participantes
-      </p>
+      <div class="flex justify-between items-center px-3 py-2 rounded-lg hover:bg-gray-100 transition">
 
-      <div class="flex flex-col gap-1">
-        @for (user of conversation.users; track user.id) {
-        <div class="flex justify-between items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition cursor-default">
-          <div class="flex flex-row items-center gap-2">
-            <div class="w-7 h-7 flex items-center justify-center rounded-full overflow-hidden bg-gray-200">
-              @if (user.avatar) {
-              <img [src]="storageUrl + user.avatar" class="w-full h-full object-cover">
-              }
-              @else {
-              <mat-icon class="text-gray-400"
-                style="width: 100%; height: 100%; font-size: 30px; display: flex; align-items: center; justify-content: center;">
-                account_circle
-              </mat-icon>
-              }
-            </div>
-            <span class="text-sm text-gray-700">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
+            @if (user.avatar) {
+            <img [src]="storageUrl + user.avatar" class="w-full h-full object-cover">
+            } @else {
+            <mat-icon class="text-gray-400 text-2xl">
+              account_circle
+            </mat-icon>
+            }
+          </div>
+
+          <div class="flex flex-col leading-tight">
+            <span class="text-sm text-gray-800">
               {{ user.name }}
             </span>
-            <span *ngIf="user.role === 'admin'" class="text-xs text-blue-500">
+
+            @if (user.role === 'admin') {
+            <span class="text-xs text-blue-500">
               Admin
             </span>
-          </div>
-          <div>
-            @if (currentRole === 'admin' && user.id !== currentUser.id) {
-            <button [matMenuTriggerFor]="menu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-
-            <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="removeUser(user.id)">
-                <mat-icon>delete</mat-icon>
-                Eliminar
-              </button>
-            </mat-menu>
             }
           </div>
         </div>
+
+        @if (currentRole === 'admin' && user.id !== currentUser.id) {
+        <button [matMenuTriggerFor]="menu" class="hover:bg-gray-200 rounded-full p-1">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="removeUser(user.id)">
+            <mat-icon>delete</mat-icon>
+            Eliminar
+          </button>
+        </mat-menu>
         }
       </div>
+      }
     </div>
-    }
-    @else {
-    <p class="text-gray-500 text-sm">
-      Chat privado
-    </p>
-    }
-
   </div>
-
 </div>
 }

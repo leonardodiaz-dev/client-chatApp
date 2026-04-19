@@ -21,6 +21,7 @@ import { environment } from '../../../environments/environment';
 import { AnadirParticipanteComponent } from '../anadir-participante/anadir-participante.component';
 import { User } from '../../models/user.model';
 import { MatMenuModule } from '@angular/material/menu';
+import { ConfirmService } from '../../shared/confirm.service';
 
 @Component({
   selector: 'app-chat-window',
@@ -47,6 +48,7 @@ export class ChatWindowComponent implements OnChanges {
   private _conversationService = inject(ConversationService);
   private _notify = inject(NotificationService);
   private _echoService = inject(EchoService);
+  private _confirmService = inject(ConfirmService);
 
   dialog = inject(MatDialog);
 
@@ -60,7 +62,15 @@ export class ChatWindowComponent implements OnChanges {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(`Dialog result: ${result}`);
+      if (result?.newUsers && this.conversation?.users) {
+        const existingIds = this.conversation.users.map((u) => u.id);
+
+        const usersToAdd = result.newUsers.filter(
+          (u: User) => !existingIds.includes(u.id),
+        );
+
+        this.conversation.users = [...this.conversation.users, ...usersToAdd];
+      }
     });
   }
 
@@ -204,21 +214,31 @@ export class ChatWindowComponent implements OnChanges {
     });
   }
 
-  removeUser(userId:number){
-    if(this.conversation?.id){
-      this._conversationService.deleteParticipante(this.conversation.id,userId).subscribe({
-        next:(value) => {
-            if(this.conversation){
-              const filterUser = this.conversation.users?.filter(u => u.id !== userId)
-              this.conversation.users = filterUser
-            }
-            this._notify.showSuccess('Participante eliminado con exito');
-        },
-        error:(err) => {
-          console.log('Ocurrio un error al eliminar el participante')
-        },
-      })
-    }
+  removeUser(userId: number) {
+    this._confirmService
+      .confirm('¿Estas seguro que quieres eliminar este participante?')
+      .subscribe((ok) => {
+        if (ok) {
+          if (this.conversation) {
+            this._conversationService
+              .deleteParticipante(this.conversation.id, userId)
+              .subscribe({
+                next: (value) => {
+                  if (this.conversation) {
+                    const filterUser = this.conversation.users?.filter(
+                      (u) => u.id !== userId,
+                    );
+                    this.conversation.users = filterUser;
+                  }
+                  this._notify.showSuccess('Participante eliminado con exito');
+                },
+                error: (err) => {
+                  console.log('Ocurrio un error al eliminar el participante');
+                },
+              });
+          }
+        }
+      });
   }
 
   getDay(date: string) {

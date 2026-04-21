@@ -107,7 +107,7 @@
 
   <div class="flex flex-col items-center p-6 gap-3 border-b shrink-0">
 
-    <div class="w-28 h-28 rounded-full overflow-hidden bg-gray-200 shadow-sm">
+    <div class="w-28 h-28 rounded-full overflow-hidden bg-gray-200 shadow-sm cursor-pointer" (click)="onAvatarClick()">
       @if (conversation.avatar) {
       <img [src]="storageUrl + conversation.avatar" class="w-full h-full object-cover">
       } @else {
@@ -117,6 +117,8 @@
       </mat-icon>
       }
     </div>
+
+    <input type="file" #fileInput hidden accept="image/*" (change)="onFileSelected($event)">
 
     <p class="text-lg font-semibold text-center">
       {{conversation | chatName}}
@@ -147,11 +149,11 @@
       <div class="flex justify-between items-center px-3 py-2 rounded-lg hover:bg-gray-100 transition">
 
         <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
+          <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
             @if (user.avatar) {
             <img [src]="storageUrl + user.avatar" class="w-full h-full object-cover">
             } @else {
-            <mat-icon class="text-gray-400 text-2xl">
+            <mat-icon class="text-gray-400 text-2xl leading-none">
               account_circle
             </mat-icon>
             }

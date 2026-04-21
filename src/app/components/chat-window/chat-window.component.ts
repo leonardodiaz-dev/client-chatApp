@@ -1,9 +1,11 @@
 import {
   Component,
+  ElementRef,
   inject,
   Input,
   OnChanges,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
@@ -118,6 +120,36 @@ export class ChatWindowComponent implements OnChanges {
           msg.status = 'leido';
         }
       });
+    });
+  }
+
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+
+  onAvatarClick() {
+    this.fileInput.nativeElement.click();
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+
+    if (!input.files || input.files.length === 0) return;
+
+    const file = input.files[0];
+
+    const formData = new FormData();
+    formData.append('avatar', file);
+    if (this.conversation)
+      formData.append('id_conversation', this.conversation?.id.toString());
+
+    this._conversationService.postAvatar(formData).subscribe({
+      next: (value) => {
+        if (this.conversation) {
+          this.conversation.avatar = value.avatar;
+        }
+      },
+      error: (err) => {
+        console.error('Error al subir imagen', err);
+      },
     });
   }
 

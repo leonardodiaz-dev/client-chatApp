@@ -4,6 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import {
   Conversation,
   ConversationResponse,
+  UpdateAvatar,
   UpdateConversation
 } from '../../models/conversation.model';
 import { User } from '../../models/user.model';
@@ -62,5 +63,8 @@ export class ConversationService {
   }
   public deleteParticipante(idConversation:number,userId:number):Observable<any>{
     return this._httpClient.delete<any>(`${this.baseUrl}/${idConversation}/user/${userId}`)
+  }
+  public postAvatar(formData:FormData):Observable<UpdateAvatar>{
+    return this._httpClient.post<UpdateAvatar>(`${this.baseUrl}/upload-avatar`,formData)
   }
 }

@@ -17,6 +17,11 @@ export interface Conversation {
   users?:User[]
 }
 
+export interface UpdateAvatar{
+  message:string;
+  avatar:string;
+}
+
 export interface UpdateConversation {
   conversation_id:string;
   user_ids:string;
